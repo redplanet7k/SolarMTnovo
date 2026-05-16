@@ -39,19 +39,172 @@ if "form" not in st.session_state:
     st.session_state.form = {}
 
 # ── HSP por cidade (Atlas Brasileiro, Fig.52 / Cap.8) ──
+# ── HSP por município do Mato Grosso ──────────────────────────────────────
+# Valores em kWh/m²/dia (plano inclinado na latitude) — Atlas INPE/LABREN 2017
+# Interpolação geográfica por latitude/longitude e região climática de MT
+# Referência: Atlas cap.8 (mapas) + Fig.52 + Fig.65 (médias regionais)
+#   Centro-Oeste médio: 5,07 kWh/m²/dia (GHI) | ~5,20 kWh/m²/dia (Hi)
+#   Norte MT: ~4,95 | Centro-Norte: ~5,05 | Centro: ~5,16 | Sul: ~5,25
 CIDADES_HSP = {
-    "Lucas do Rio Verde": 5.16,
-    "Cuiabá":             5.20,
-    "Várzea Grande":      5.20,
-    "Rondonópolis":       5.15,
-    "Sorriso":            5.10,
-    "Sinop":              5.05,
-    "Alta Floresta":      4.95,
-    "Tangará da Serra":   5.10,
-    "Barra do Garças":    5.18,
-    "Cáceres":            5.12,
-    "Campo Grande/MS":    5.25,
-    "Outro município MT": 5.07,
+    # ── A ──────────────────────────────────────────────────────────────────
+    "Acorizal":                     5.18,  # Centro-Oeste, próximo Cuiabá
+    "Água Boa":                     5.20,  # Leste MT, Cerrado
+    "Alta Floresta":                4.92,  # Norte MT, mais nebulosidade
+    "Alto Araguaia":                5.28,  # Sul MT, Cerrado seco
+    "Alto Boa Vista":               5.05,  # Norte-Leste MT
+    "Alto Garças":                  5.26,  # Sul MT
+    "Alto Paraguai":                5.15,  # Centro-Norte MT
+    "Alto Taquari":                 5.30,  # Sul MT, divisa GO/MS
+    "Apiacás":                      4.88,  # Extremo Norte MT
+    "Araguaiana":                   5.22,  # Leste MT
+    "Araguainha":                   5.25,  # Leste MT, fronteira GO
+    "Araputanga":                   5.10,  # Oeste MT
+    "Arenápolis":                   5.12,  # Centro-Norte MT
+    "Aripuanã":                     4.85,  # Extremo Norte/Noroeste MT
+    # ── B ──────────────────────────────────────────────────────────────────
+    "Barão de Melgaço":             5.17,  # Pantanal MT
+    "Barra do Bugres":              5.13,  # Oeste MT
+    "Barra do Garças":              5.20,  # Leste MT
+    "Bom Jesus do Araguaia":        5.08,  # Nordeste MT
+    "Brasnorte":                    5.05,  # Noroeste MT
+    # ── C ──────────────────────────────────────────────────────────────────
+    "Cáceres":                      5.12,  # Oeste MT, Pantanal
+    "Campinápolis":                 5.18,  # Leste-Centro MT
+    "Campo Novo do Parecis":        5.08,  # Centro-Oeste MT
+    "Campo Verde":                  5.22,  # Sul-Centro MT
+    "Campos de Júlio":              5.06,  # Noroeste MT
+    "Canabrava do Norte":           5.02,  # Norte MT
+    "Canarana":                     5.18,  # Leste MT
+    "Carlinda":                     4.95,  # Norte MT
+    "Castanheira":                  4.98,  # Norte MT
+    "Chapada dos Guimarães":        5.20,  # Centro MT, planalto
+    "Cláudia":                      5.08,  # Norte-Centro MT
+    "Cocalinho":                    5.15,  # Nordeste MT
+    "Colíder":                      4.97,  # Norte MT
+    "Colniza":                      4.82,  # Extremo Norte MT
+    "Comodoro":                     5.04,  # Noroeste MT
+    "Confresa":                     5.05,  # Nordeste MT
+    "Conquista d'Oeste":            5.08,  # Oeste MT
+    "Cotriguaçu":                   4.86,  # Norte MT
+    "Cuiabá":                       5.20,  # Capital — Centro MT
+    "Curvelândia":                  5.12,  # Oeste MT
+    # ── D ──────────────────────────────────────────────────────────────────
+    "Denise":                       5.13,  # Centro-Norte MT
+    "Diamantino":                   5.12,  # Centro-Norte MT
+    "Dom Aquino":                   5.22,  # Centro-Sul MT
+    # ── F ──────────────────────────────────────────────────────────────────
+    "Feliz Natal":                  5.10,  # Norte-Centro MT
+    "Figueirópolis d'Oeste":        5.10,  # Oeste MT
+    # ── G ──────────────────────────────────────────────────────────────────
+    "Gaúcha do Norte":              5.10,  # Norte-Centro MT
+    "General Carneiro":             5.25,  # Sul MT
+    "Glória d'Oeste":               5.10,  # Oeste MT
+    "Guarantã do Norte":            4.95,  # Norte MT
+    "Guiratinga":                   5.24,  # Sul-Centro MT
+    # ── I ──────────────────────────────────────────────────────────────────
+    "Indiavaí":                     5.10,  # Oeste MT
+    "Ipiranga do Norte":            5.08,  # Centro-Norte MT
+    "Itanhangá":                    5.10,  # Centro-Norte MT
+    "Itaúba":                       5.00,  # Norte MT
+    "Itiquira":                     5.30,  # Sul MT, divisa MS
+    # ── J ──────────────────────────────────────────────────────────────────
+    "Jaciara":                      5.23,  # Sul-Centro MT
+    "Jangada":                      5.18,  # Centro MT
+    "Jauru":                        5.10,  # Oeste MT
+    "Juara":                        4.97,  # Norte-Noroeste MT
+    "Juína":                        4.90,  # Noroeste MT
+    "Juruena":                      4.92,  # Norte MT
+    "Juscimeira":                   5.24,  # Sul-Centro MT
+    # ── L ──────────────────────────────────────────────────────────────────
+    "Lambari d'Oeste":              5.10,  # Oeste MT
+    "Lucas do Rio Verde":           5.16,  # Centro-Norte MT ★
+    "Luciára":                      5.08,  # Nordeste MT
+    # ── M ──────────────────────────────────────────────────────────────────
+    "Marcelândia":                  5.00,  # Norte MT
+    "Matupá":                       4.97,  # Norte MT
+    "Mirassol d'Oeste":             5.10,  # Oeste MT
+    # ── N ──────────────────────────────────────────────────────────────────
+    "Nobres":                       5.16,  # Centro-Norte MT
+    "Nortelândia":                  5.13,  # Centro-Norte MT
+    "Nossa Senhora do Livramento":  5.18,  # Centro-Oeste MT
+    "Nova Bandeirantes":            4.85,  # Extremo Norte MT
+    "Nova Brasilândia":             5.18,  # Centro MT
+    "Nova Canaã do Norte":          4.95,  # Norte MT
+    "Nova Guarita":                 4.97,  # Norte MT
+    "Nova Lacerda":                 5.06,  # Oeste MT
+    "Nova Marilândia":              5.12,  # Centro-Norte MT
+    "Nova Maringá":                 5.08,  # Centro-Norte MT
+    "Nova Monte Verde":             4.90,  # Norte MT
+    "Nova Mutum":                   5.14,  # Centro-Norte MT
+    "Nova Nazaré":                  5.18,  # Leste MT
+    "Nova Olímpia":                 5.13,  # Oeste MT
+    "Nova Santa Helena":            4.98,  # Norte MT
+    "Nova Ubiratã":                 5.10,  # Centro-Norte MT
+    "Nova Xavantina":               5.20,  # Leste MT
+    "Novo Horizonte do Norte":      4.95,  # Norte MT
+    "Novo Mundo":                   4.93,  # Norte MT
+    "Novo Santo Antônio":           5.15,  # Nordeste MT
+    "Novo São Joaquim":             5.20,  # Leste MT
+    # ── P ──────────────────────────────────────────────────────────────────
+    "Paranaíta":                    4.90,  # Norte MT
+    "Paranatinga":                  5.15,  # Centro MT
+    "Pedra Preta":                  5.25,  # Sul-Centro MT
+    "Peixoto de Azevedo":           4.97,  # Norte MT
+    "Planalto da Serra":            5.18,  # Centro MT
+    "Poconé":                       5.15,  # Pantanal Centro-Oeste MT
+    "Pontal da Araguaia":           5.22,  # Leste MT
+    "Ponte Branca":                 5.23,  # Leste MT
+    "Pontes e Lacerda":             5.06,  # Oeste MT
+    "Porto Alegre do Norte":        5.05,  # Nordeste MT
+    "Porto dos Gaúchos":            5.05,  # Norte-Centro MT
+    "Porto Esperidião":             5.10,  # Oeste MT
+    "Porto Estrela":                5.12,  # Oeste MT
+    "Poxoréo":                      5.22,  # Sul-Centro MT
+    "Primavera do Leste":           5.25,  # Sul-Centro MT
+    # ── Q ──────────────────────────────────────────────────────────────────
+    "Querência":                    5.12,  # Norte-Leste MT
+    # ── R ──────────────────────────────────────────────────────────────────
+    "Reserva do Cabaçal":           5.10,  # Oeste MT
+    "Ribeirão Cascalheira":         5.15,  # Nordeste MT
+    "Ribeirãozinho":                5.25,  # Leste MT
+    "Rio Branco":                   5.10,  # Oeste MT
+    "Rondolândia":                  4.83,  # Extremo Norte MT
+    "Rondonópolis":                 5.25,  # Sul-Centro MT
+    "Rosário Oeste":                5.17,  # Centro MT
+    # ── S ──────────────────────────────────────────────────────────────────
+    "Salto do Céu":                 5.10,  # Oeste MT
+    "Santa Carmem":                 5.05,  # Norte-Centro MT
+    "Santa Cruz do Xingu":          5.08,  # Nordeste MT
+    "Santa Rita do Trivelato":      5.15,  # Centro-Norte MT
+    "Santa Terezinha":              5.05,  # Nordeste MT
+    "Santo Afonso":                 5.12,  # Centro-Norte MT
+    "Santo Antônio do Leste":       5.20,  # Centro-Leste MT
+    "Santo Antônio do Leverger":    5.18,  # Centro-Oeste MT
+    "São Félix do Araguaia":        5.08,  # Nordeste MT
+    "São José do Povo":             5.25,  # Sul MT
+    "São José do Rio Claro":        5.12,  # Centro-Norte MT
+    "São José do Xingu":            5.08,  # Nordeste MT
+    "São José dos Quatro Marcos":   5.10,  # Oeste MT
+    "São Pedro da Cipa":            5.22,  # Sul-Centro MT
+    "Sapezal":                      5.07,  # Noroeste MT
+    "Serra Nova Dourada":           5.18,  # Nordeste MT
+    "Sinop":                        5.05,  # Norte-Centro MT
+    "Sorriso":                      5.10,  # Centro-Norte MT
+    # ── T ──────────────────────────────────────────────────────────────────
+    "Tabaporã":                     5.08,  # Centro-Norte MT
+    "Tangará da Serra":             5.12,  # Oeste MT
+    "Tapurah":                      5.12,  # Centro-Norte MT
+    "Terra Nova do Norte":          4.97,  # Norte MT
+    "Tesouro":                      5.25,  # Sul-Centro MT
+    "Torixoréu":                    5.25,  # Sul-Leste MT
+    # ── U ──────────────────────────────────────────────────────────────────
+    "União do Sul":                 5.05,  # Norte-Centro MT
+    # ── V ──────────────────────────────────────────────────────────────────
+    "Vale de São Domingos":         5.10,  # Oeste MT
+    "Várzea Grande":                5.20,  # Centro MT, Cuiabá
+    "Vera":                         5.08,  # Norte-Centro MT
+    "Vila Bela da Santíssima Trindade": 5.05, # Extremo Oeste MT
+    "Vila Rica":                    5.05,  # Nordeste MT
 }
 
 SAZON = [0.930,0.950,0.968,1.027,1.082,1.132,1.161,1.181,1.094,0.988,0.919,0.900]
