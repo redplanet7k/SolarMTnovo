@@ -1050,7 +1050,7 @@ st.markdown("""
 <div class="footer">
   <div class="footer-brand">SolarMT — Lucas do Rio Verde / MT</div>
   <p>Criado por
-    <a href="https://www.instagram.com/_atlaskennedydc" target="_blank">Atlas Kennedy</a> & co-autorado por 
+    <a href="https://www.instagram.com/srkennedydc/" target="_blank">Atlas Kennedy</a> & co-autorado por 
         <a href='https://www.instagram.com/angelicasantos.r/' target='_blank' style='color: #ffc107; text-decoration: none;'>Angélica Santos</a></p>
     · Graduandos em Ciência e Tecnologia ·
     <strong style="color:#0d3d6e">UFMT — Universidade Federal de Mato Grosso</strong>
