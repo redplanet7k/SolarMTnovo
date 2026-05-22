@@ -211,22 +211,23 @@ SAZON = [0.930,0.950,0.968,1.027,1.082,1.132,1.161,1.181,1.094,0.988,0.919,0.900
 MESES_C = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
 
 # ── Cores ──
-BG="#080f1e"; BG2="#0c1628"; BG3="#111e38"
-AMBER="#f59e0b"; GREEN="#10b981"; BLUE="#60a5fa"
-MUTED="#7a90b8"; TEXT="#e8f0ff"; GRID="rgba(255,255,255,0.04)"
+BG="#f0f5fb";  BG2="#ffffff";  BG3="#e4edf8"
+BLUE="#1d6fbf"; BLUE2="#2580d6"; BLUED="#0d3d6e"
+GREEN="#16a34a"; ORANGE="#ea8000"; RED="#dc2626"
+MUTED="#5a7099"; TEXT="#1a2744"; GRID="rgba(29,111,191,0.06)"
 
 def theme(fig, height=260):
     fig.update_layout(
-        paper_bgcolor=BG2, plot_bgcolor=BG,
-        font=dict(family="Sora,sans-serif", color=TEXT, size=11),
-        legend=dict(bgcolor=BG2, bordercolor="rgba(255,255,255,0.09)",
+        paper_bgcolor=BG2, plot_bgcolor="#f8fbff",
+        font=dict(family="Inter,sans-serif", color=TEXT, size=11),
+        legend=dict(bgcolor=BG2, bordercolor="#c8d9ef",
                     font=dict(color=MUTED, size=10)),
         height=height, margin=dict(l=8,r=8,t=36,b=8),
     )
-    fig.update_xaxes(gridcolor=GRID, zerolinecolor=GRID,
-                     linecolor="rgba(255,255,255,0.09)", tickfont=dict(color=MUTED,size=10))
-    fig.update_yaxes(gridcolor=GRID, zerolinecolor=GRID,
-                     linecolor="rgba(255,255,255,0.09)", tickfont=dict(color=MUTED,size=10))
+    fig.update_xaxes(gridcolor=GRID, zerolinecolor="#c8d9ef",
+                     linecolor="#c8d9ef", tickfont=dict(color=MUTED,size=10))
+    fig.update_yaxes(gridcolor=GRID, zerolinecolor="#c8d9ef",
+                     linecolor="#c8d9ef", tickfont=dict(color=MUTED,size=10))
     return fig
 
 # ══════════════════════════════════════════════════════
@@ -234,111 +235,250 @@ def theme(fig, height=260):
 # ══════════════════════════════════════════════════════
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 :root{
-  --bg:#080f1e;--bg2:#0c1628;--bg3:#111e38;
-  --card:rgba(255,255,255,0.05);--cb:rgba(255,255,255,0.09);
-  --amber:#f59e0b;--amber2:#fbbf24;
-  --abg:rgba(245,158,11,0.12);--abd:rgba(245,158,11,0.3);
-  --green:#10b981;--gbg:rgba(16,185,129,0.1);--gbd:rgba(16,185,129,0.3);
-  --blue:#60a5fa;--bbg:rgba(96,165,250,0.1);--bbd:rgba(96,165,250,0.3);
-  --text:#e8f0ff;--muted:#7a90b8;--dim:#3d5280;
+  /* Paleta azul claro / branco / cinza */
+  --bg:#f0f5fb;          /* fundo geral — azul muito claro */
+  --bg2:#ffffff;         /* cards principais — branco */
+  --bg3:#e4edf8;         /* fundo secundário — azul claro */
+  --card:#ffffff;        /* card branco */
+  --cb:#c8d9ef;          /* borda azul acinzentada */
+  --text:#1a2744;        /* texto principal — azul escuro */
+  --muted:#5a7099;       /* texto secundário */
+  --dim:#9ab0cc;         /* texto apagado */
+  /* Azul principal */
+  --blue:#1d6fbf;        /* azul médio — ações principais */
+  --blue2:#2580d6;       /* azul hover */
+  --bbg:#deeaf8;         /* fundo azul claro */
+  --bbd:#a8c8ee;         /* borda azul claro */
+  --blued:#0d3d6e;       /* azul escuro — títulos */
+  /* Verde (aprovação / sucesso) */
+  --green:#16a34a;
+  --gbg:#dcfce7;
+  --gbd:#86efac;
+  /* Laranja (alerta / atenção) */
+  --orange:#ea8000;
+  --obg:#fff3e0;
+  --obd:#fbbf70;
+  /* Vermelho */
+  --red:#dc2626;
+  --rbg:#fee2e2;
+  --rbd:#fca5a5;
 }
-html,body,[class*="css"]{font-family:'Sora',sans-serif!important;background-color:var(--bg)!important;color:var(--text)!important;}
+
+html,body,[class*="css"]{
+  font-family:'Inter',sans-serif!important;
+  background-color:var(--bg)!important;
+  color:var(--text)!important;
+}
 .stApp{background-color:var(--bg)!important;}
 #MainMenu,footer,header[data-testid="stHeader"]{display:none!important;}
 section[data-testid="stSidebar"]{display:none!important;}
 .block-container{max-width:880px!important;padding:0 16px 80px!important;margin:0 auto!important;}
 
-/* Topbar */
-.topbar{padding:14px 0 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--cb);margin-bottom:0;}
-.logo-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#f59e0b,#f97316);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.logo-text{font-size:17px;font-weight:700;color:var(--text);}
-.logo-text span{color:var(--amber);}
-.htag{margin-left:auto;font-size:10px;color:var(--muted);background:var(--bg3);border:1px solid var(--cb);border-radius:20px;padding:3px 12px;white-space:nowrap;}
+/* ── Topbar ── */
+.topbar{
+  padding:14px 0 12px;display:flex;align-items:center;gap:12px;
+  border-bottom:2px solid var(--cb);margin-bottom:0;
+  background:var(--bg);
+}
+.logo-icon{
+  width:36px;height:36px;border-radius:9px;
+  background:linear-gradient(135deg,#1d6fbf,#0d3d6e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.logo-text{font-size:17px;font-weight:700;color:var(--blued);}
+.logo-text span{color:var(--blue);}
+.htag{
+  margin-left:auto;font-size:10px;color:var(--muted);
+  background:var(--bg3);border:1px solid var(--cb);
+  border-radius:20px;padding:3px 12px;white-space:nowrap;
+}
 
-/* Hero */
+/* ── Hero ── */
 .hero{text-align:center;padding:36px 16px 20px;}
-.hero h1{font-size:clamp(20px,5vw,36px);font-weight:700;background:linear-gradient(135deg,var(--text) 30%,var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;line-height:1.2;}
+.hero h1{
+  font-size:clamp(20px,5vw,34px);font-weight:700;
+  background:linear-gradient(135deg,var(--blued) 20%,var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:10px;line-height:1.2;
+}
 .hero p{color:var(--muted);font-size:14px;max-width:520px;margin:0 auto 18px;}
 .hero-badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
-.badge{background:var(--bg3);border:1px solid var(--cb);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--muted);}
+.badge{
+  background:var(--bg3);border:1px solid var(--bbd);
+  border-radius:20px;padding:4px 12px;font-size:11px;color:var(--blue);font-weight:500;
+}
 
-/* Stepper */
+/* ── Stepper ── */
 .stepper{display:flex;align-items:center;justify-content:center;padding:18px 16px;max-width:460px;margin:0 auto 24px;}
 .step{display:flex;align-items:center;gap:7px;}
-.snum{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--dim);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--dim);}
+.snum{
+  width:32px;height:32px;border-radius:50%;
+  background:#e4edf8;border:1.5px solid var(--dim);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;color:var(--dim);
+}
 .slabel{font-size:12px;color:var(--dim);font-weight:500;}
-.step.active .snum{background:var(--amber);border-color:var(--amber);color:#08101e;}
-.step.active .slabel{color:var(--amber);}
+.step.active .snum{background:var(--blue);border-color:var(--blue);color:#fff;}
+.step.active .slabel{color:var(--blue);font-weight:600;}
 .step.done .snum{background:var(--green);border-color:var(--green);color:#fff;}
 .step.done .slabel{color:var(--green);}
-.sline{flex:1;height:1px;background:var(--dim);margin:0 8px;min-width:28px;}
+.sline{flex:1;height:2px;background:var(--dim);margin:0 8px;min-width:28px;border-radius:2px;}
 .sline.done{background:var(--green);}
 
-/* Cards */
-.card{background:var(--card);border:1px solid var(--cb);border-radius:14px;padding:22px 20px;margin-bottom:14px;}
-.card-h{font-size:16px;font-weight:600;margin-bottom:4px;}
+/* ── Cards ── */
+.card{
+  background:var(--card);border:1px solid var(--cb);
+  border-radius:14px;padding:22px 20px;margin-bottom:14px;
+  box-shadow:0 1px 6px rgba(29,111,191,0.07);
+}
+.card-h{font-size:16px;font-weight:600;margin-bottom:4px;color:var(--blued);}
 .card-sub{font-size:13px;color:var(--muted);margin-bottom:18px;}
 
-/* Metric grid */
+/* ── Metric grid ── */
 .mg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
-.mc{border-radius:12px;padding:14px 12px;background:var(--card);border:1px solid var(--cb);}
-.mc.a{background:var(--abg);border-color:var(--abd);}
+.mc{
+  border-radius:12px;padding:14px 12px;
+  background:#fff;border:1px solid var(--cb);
+  box-shadow:0 1px 4px rgba(29,111,191,0.06);
+}
+.mc.a{background:var(--obg);border-color:var(--obd);}
 .mc.g{background:var(--gbg);border-color:var(--gbd);}
 .mc.b{background:var(--bbg);border-color:var(--bbd);}
 .ml{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;}
-.mv{font-size:19px;font-weight:700;line-height:1.2;}
-.mc.a .mv{color:var(--amber);}
+.mv{font-size:19px;font-weight:700;line-height:1.2;color:var(--blued);}
+.mc.a .mv{color:var(--orange);}
 .mc.g .mv{color:var(--green);}
 .mc.b .mv{color:var(--blue);}
 .mu{font-size:10px;color:var(--dim);margin-top:2px;}
 
-/* TIR card */
-.tir-card{display:flex;align-items:center;gap:16px;background:var(--gbg);border:1px solid var(--gbd);border-radius:12px;padding:16px 18px;margin-bottom:12px;flex-wrap:wrap;}
+/* ── TIR card ── */
+.tir-card{
+  display:flex;align-items:center;gap:16px;
+  background:var(--gbg);border:1px solid var(--gbd);
+  border-radius:12px;padding:16px 18px;margin-bottom:12px;flex-wrap:wrap;
+  box-shadow:0 1px 4px rgba(22,163,74,0.08);
+}
 .tir-val{font-size:28px;font-weight:700;color:var(--green);}
-.tir-msg{flex:1;min-width:200px;font-size:12px;color:var(--muted);line-height:1.5;}
+.tir-msg{flex:1;min-width:200px;font-size:12px;color:#166534;line-height:1.5;}
 
-/* Info boxes */
-.ibox{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.25);border-radius:8px;padding:12px 14px;font-size:13px;color:#93c5fd;margin-bottom:12px;line-height:1.6;}
-.ibox-w{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:12px 14px;font-size:13px;color:#fde68a;margin-bottom:12px;line-height:1.6;}
-.ibox-r{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:12px 14px;font-size:13px;color:#fca5a5;margin-bottom:12px;}
+/* ── Info boxes ── */
+.ibox{
+  background:var(--bbg);border:1px solid var(--bbd);
+  border-radius:8px;padding:12px 14px;font-size:13px;
+  color:var(--blued);margin-bottom:12px;line-height:1.6;
+}
+.ibox-w{
+  background:var(--obg);border:1px solid var(--obd);
+  border-radius:8px;padding:12px 14px;font-size:13px;
+  color:#7c3b00;margin-bottom:12px;line-height:1.6;
+}
+.ibox-r{
+  background:var(--rbg);border:1px solid var(--rbd);
+  border-radius:8px;padding:12px 14px;font-size:13px;
+  color:var(--red);margin-bottom:12px;
+}
 
-/* Atlas badge */
-.atlas-tag{display:inline-block;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;font-size:10px;border-radius:20px;padding:2px 10px;margin-left:6px;vertical-align:middle;}
+/* ── Atlas badge ── */
+.atlas-tag{
+  display:inline-block;background:var(--gbg);
+  border:1px solid var(--gbd);color:var(--green);
+  font-size:10px;border-radius:20px;
+  padding:2px 10px;margin-left:6px;vertical-align:middle;
+}
 
-/* Disciplinas */
+/* ── Disciplinas ── */
 .disc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
-.dcard{border-radius:8px;padding:12px;border:1px solid;}
-.da{background:var(--abg);border-color:var(--abd);}
+.dcard{border-radius:8px;padding:12px;border:1px solid;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.da{background:var(--obg);border-color:var(--obd);}
 .db{background:var(--bbg);border-color:var(--bbd);}
 .dg{background:var(--gbg);border-color:var(--gbd);}
-.dp{background:rgba(192,132,252,.1);border-color:rgba(192,132,252,.3);}
+.dp{background:#f5f0ff;border-color:#c4b5fd;}
 .full{grid-column:span 2;}
 .dcard h4{font-size:12px;font-weight:600;margin-bottom:4px;}
-.da h4{color:var(--amber);} .db h4{color:var(--blue);} .dg h4{color:var(--green);} .dp h4{color:#c084fc;}
+.da h4{color:var(--orange);}
+.db h4{color:var(--blue);}
+.dg h4{color:var(--green);}
+.dp h4{color:#7c3aed;}
 .dcard p{font-size:11px;color:var(--muted);line-height:1.5;}
 
-/* Footer */
-.footer{margin-top:36px;padding:20px 0 14px;border-top:1px solid var(--cb);text-align:center;color:var(--muted);font-size:12px;line-height:1.8;}
-.footer a{color:var(--amber);text-decoration:none;font-weight:600;}
-.footer-brand{color:#fff;font-weight:700;font-size:14px;margin-bottom:4px;}
+/* ── Footer ── */
+.footer{
+  margin-top:36px;padding:20px 0 14px;
+  border-top:2px solid var(--cb);
+  text-align:center;color:var(--muted);font-size:12px;line-height:1.8;
+}
+.footer a{color:var(--blue);text-decoration:none;font-weight:600;}
+.footer a:hover{text-decoration:underline;}
+.footer-brand{color:var(--blued);font-weight:700;font-size:14px;margin-bottom:4px;}
 
-/* Widgets */
-input,textarea{background:#111e38!important;color:#e8f0ff!important;caret-color:#e8f0ff!important;}
-div[data-testid="stNumberInput"] input,div[data-testid="stTextInput"] input{background:#111e38!important;border:1px solid rgba(255,255,255,0.15)!important;border-radius:8px!important;color:#e8f0ff!important;font-size:15px!important;-webkit-text-fill-color:#e8f0ff!important;min-height:44px!important;}
-div[data-testid="stSelectbox"] div[data-baseweb="select"]>div{background:#111e38!important;border:1px solid rgba(255,255,255,0.15)!important;border-radius:8px!important;color:#e8f0ff!important;min-height:44px!important;}
-div[data-testid="stSelectbox"] div[data-baseweb="select"] *{color:#e8f0ff!important;}
-label[data-testid="stWidgetLabel"] p{font-size:11px!important;font-weight:600!important;color:var(--muted)!important;text-transform:uppercase;letter-spacing:.06em!important;}
+/* ── Widgets Streamlit ── */
+input,textarea{
+  background:#fff!important;
+  color:var(--text)!important;
+  caret-color:var(--blue)!important;
+}
+div[data-testid="stNumberInput"] input,
+div[data-testid="stTextInput"] input{
+  background:#fff!important;
+  border:1.5px solid var(--cb)!important;
+  border-radius:8px!important;
+  color:var(--text)!important;
+  font-size:15px!important;
+  -webkit-text-fill-color:var(--text)!important;
+  min-height:44px!important;
+  box-shadow:inset 0 1px 3px rgba(29,111,191,0.05)!important;
+}
+div[data-testid="stNumberInput"] input:focus,
+div[data-testid="stTextInput"] input:focus{
+  border-color:var(--blue)!important;
+  box-shadow:0 0 0 3px rgba(29,111,191,0.12)!important;
+}
+div[data-testid="stSelectbox"] div[data-baseweb="select"]>div{
+  background:#fff!important;
+  border:1.5px solid var(--cb)!important;
+  border-radius:8px!important;
+  color:var(--text)!important;
+  min-height:44px!important;
+}
+div[data-testid="stSelectbox"] div[data-baseweb="select"] *{
+  color:var(--text)!important;
+}
+label[data-testid="stWidgetLabel"] p{
+  font-size:11px!important;font-weight:600!important;
+  color:var(--muted)!important;text-transform:uppercase;
+  letter-spacing:.06em!important;
+}
 div[data-testid="stSlider"] p{color:var(--muted)!important;}
-div[data-testid="stButton"]>button{border-radius:8px!important;font-family:'Sora',sans-serif!important;font-weight:600!important;font-size:14px!important;padding:10px 22px!important;min-height:44px!important;}
-div[data-testid="stButton"]>button[kind="primary"]{background:var(--amber)!important;color:#08101e!important;border:none!important;}
-div[data-testid="stButton"]>button[kind="secondary"]{background:transparent!important;color:var(--muted)!important;border:1px solid rgba(255,255,255,0.09)!important;}
+div[data-testid="stButton"]>button{
+  border-radius:8px!important;font-family:'Inter',sans-serif!important;
+  font-weight:600!important;font-size:14px!important;
+  padding:10px 22px!important;min-height:44px!important;
+  transition:all .2s!important;
+}
+div[data-testid="stButton"]>button[kind="primary"]{
+  background:var(--blue)!important;color:#fff!important;border:none!important;
+}
+div[data-testid="stButton"]>button[kind="primary"]:hover{
+  background:var(--blue2)!important;transform:translateY(-1px);
+  box-shadow:0 4px 14px rgba(29,111,191,0.3)!important;
+}
+div[data-testid="stButton"]>button[kind="secondary"]{
+  background:#fff!important;color:var(--muted)!important;
+  border:1.5px solid var(--cb)!important;
+}
 div[data-testid="stTabs"] button{color:var(--muted)!important;font-size:12px!important;}
-div[data-testid="stTabs"] button[aria-selected="true"]{color:var(--amber)!important;border-bottom-color:var(--amber)!important;}
+div[data-testid="stTabs"] button[aria-selected="true"]{
+  color:var(--blue)!important;border-bottom-color:var(--blue)!important;font-weight:600!important;
+}
 div[data-testid="stTabs"]>div:first-child{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none;}
+div[data-testid="stMetric"]{background:#fff!important;border:1px solid var(--cb)!important;border-radius:10px!important;padding:12px!important;}
+div[data-testid="stDataFrame"]{border:1px solid var(--cb)!important;border-radius:8px!important;}
+div[data-testid="stExpander"]{background:#fff!important;border:1px solid var(--cb)!important;border-radius:10px!important;}
 
-/* Mobile */
+/* ── Mobile ── */
 @media(max-width:680px){
   .mg{grid-template-columns:1fr 1fr!important;}
   .disc-grid{grid-template-columns:1fr!important;}
@@ -565,7 +705,7 @@ elif st.session_state.step == 3:
     # ── Métricas azul (financeiro) ────────────────────────
     pb_s = pb["payback_simples_anos"] or ">25"
     pb_d = pb["payback_descontado_anos"] or ">25"
-    cor_vpl = "var(--green)" if vpl["viavel"] else "#f87171"
+    cor_vpl = "var(--green)" if vpl["viavel"] else "var(--red)"
     vpl_fmt = f"R$ {abs(vpl['vpl']):,.0f}"
     if vpl['vpl'] < 0: vpl_fmt = "−"+vpl_fmt
     st.markdown(f"""
@@ -615,16 +755,16 @@ elif st.session_state.step == 3:
         fig1 = go.Figure()
         fig1.add_trace(go.Scatter(x=MESES+MESES[::-1],
             y=[ic_hi[m] for m in MESES]+[ic_lo[m] for m in MESES[::-1]],
-            fill="toself", fillcolor="rgba(245,158,11,0.10)",
+            fill="toself", fillcolor="rgba(29,111,191,0.10)",
             line=dict(color="rgba(0,0,0,0)"), name="IC 95%", hoverinfo="skip"))
         fig1.add_trace(go.Bar(x=MESES, y=gv, name="Geração Est.",
-            marker_color="rgba(245,158,11,0.70)",
-            marker_line_color=AMBER, marker_line_width=1))
+            marker_color="rgba(29,111,191,0.75)",
+            marker_line_color=BLUE, marker_line_width=1))
         fig1.add_trace(go.Scatter(x=MESES, y=[consumo]*12, name="Consumo",
             line=dict(color="#f87171", width=2, dash="dash"), mode="lines"))
         fig1.add_trace(go.Scatter(x=MESES, y=gv, mode="lines+markers",
-            name="Geração", line=dict(color=AMBER, width=2),
-            marker=dict(size=6, color=AMBER), showlegend=False))
+            name="Geração", line=dict(color=BLUE, width=2),
+            marker=dict(size=6, color=BLUE), showlegend=False))
         fig1.update_layout(title="Geração Estimada vs Consumo (kWh/mês)",
             barmode="overlay", yaxis_title="kWh",
             legend=dict(orientation="h", y=-0.30))
@@ -661,7 +801,7 @@ elif st.session_state.step == 3:
             marker_color=cores, name="Fluxo Líquido"), row=1, col=1)
         cores_a = [GREEN if v>=0 else "#f87171" for v in fc["acumulado"]]
         fig2.add_trace(go.Scatter(x=anos_l, y=fc["acumulado"], mode="lines+markers",
-            line=dict(color=AMBER, width=2.5), marker=dict(color=cores_a, size=5),
+            line=dict(color=ORANGE, width=2.5), marker=dict(color=cores_a, size=5),
             name="Acumulado"), row=2, col=1)
         # Linha zero
         fig2.add_shape(type="line", x0=0, x1=1, y0=0, y1=0,
@@ -672,10 +812,10 @@ elif st.session_state.step == 3:
         if pb["payback_simples_anos"]:
             pi = pb["payback_simples_anos"] - 1
             fig2.add_shape(type="line", x0=pi, x1=pi, y0=0, y1=1,
-                xref="x2", yref="y2 domain", line=dict(dash="dot", color=AMBER, width=1.8))
+                xref="x2", yref="y2 domain", line=dict(dash="dot", color=BLUE, width=1.8))
             fig2.add_annotation(x=pi, y=1, xref="x2", yref="y2 domain",
                 text=f"Payback Ano {pb['payback_simples_anos']}", showarrow=False,
-                yanchor="bottom", font=dict(color=AMBER, size=10))
+                yanchor="bottom", font=dict(color=BLUE, size=10))
         fig2.update_layout(showlegend=True)
         theme(fig2, 520); st.plotly_chart(fig2, use_container_width=True)
 
@@ -684,7 +824,7 @@ elif st.session_state.step == 3:
         vals_p   = [inv["custo_modulos"],inv["custo_inversor"],inv["custo_estrutura"],
                     inv["custo_instalacao"],inv["custo_outros"]]
         fig_d = go.Figure(go.Pie(labels=labels_p, values=vals_p, hole=0.52,
-            marker_colors=[AMBER, BLUE, GREEN, "#c084fc", MUTED],
+            marker_colors=[BLUE, BLUED, GREEN, "#7c3aed", MUTED],
             textfont=dict(size=10, color=TEXT)))
         fig_d.update_layout(title="Composição do Investimento",
             legend=dict(orientation="h", y=-0.18, font=dict(color=MUTED, size=10)))
@@ -718,8 +858,8 @@ elif st.session_state.step == 3:
             st.latex(r"PR = 1-(\eta_{inv}+\eta_{cab}+\eta_{som}+\eta_{suj}+\alpha_T\Delta T)")
         with c3b:
             fig_ang = go.Figure(go.Scatter(x=ang["betas"], y=ang["irradiancias"],
-                mode="lines", line=dict(color=AMBER, width=2.5),
-                fill="tozeroy", fillcolor="rgba(245,158,11,0.08)"))
+                mode="lines", line=dict(color=BLUE, width=2.5),
+                fill="tozeroy", fillcolor="rgba(29,111,191,0.08)"))
             fig_ang.add_vline(x=ang["angulo_otimo_graus"], line_dash="dash",
                 line_color=GREEN, annotation_text=f"β*={ang['angulo_otimo_graus']}°",
                 annotation_font_color=GREEN)
@@ -732,9 +872,9 @@ elif st.session_state.step == 3:
         fig_tmp = go.Figure(go.Scatter(x=temps, y=[perda_por_temperatura(float(t)) for t in temps],
             mode="lines", line=dict(color="#f87171", width=2),
             fill="tozeroy", fillcolor="rgba(248,113,113,0.07)"))
-        fig_tmp.add_vline(x=TEMP_OPERACAO_LOCAL, line_dash="dash", line_color=AMBER,
+        fig_tmp.add_vline(x=TEMP_OPERACAO_LOCAL, line_dash="dash", line_color=BLUE,
             annotation_text=f"T_op={TEMP_OPERACAO_LOCAL}°C → {per['Temperatura']}% perda",
-            annotation_font_color=AMBER)
+            annotation_font_color=BLUE)
         fig_tmp.update_layout(title="Perda por Temperatura — αT = −0,35%/°C (Física III)",
             xaxis_title="T (°C)", yaxis_title="Perda (%)")
         theme(fig_tmp, 220); st.plotly_chart(fig_tmp, use_container_width=True)
@@ -750,7 +890,7 @@ elif st.session_state.step == 3:
         m3.metric("Coef. Variação",  f"{std/med*100:.1f}%")
         fig_s = go.Figure()
         fig_s.add_trace(go.Bar(x=MESES, y=irr_v_adj, name="HSP",
-            marker_color="rgba(245,158,11,0.75)", marker_line_color=AMBER, marker_line_width=1))
+            marker_color="rgba(29,111,191,0.75)", marker_line_color=BLUE, marker_line_width=1))
         fig_s.add_hline(y=med, line_dash="dash", line_color=GREEN,
             annotation_text=f"Média = {med:.2f}", annotation_font_color=GREEN)
         fig_s.add_hline(y=med+std, line_dash="dot", line_color=MUTED,
@@ -768,8 +908,8 @@ elif st.session_state.step == 3:
         lo95 = mu_g-1.96*sg; hi95 = mu_g+1.96*sg
         fig_n = go.Figure()
         fig_n.add_trace(go.Scatter(x=xd, y=yd, mode="lines",
-            line=dict(color=AMBER, width=2), fill="tozeroy",
-            fillcolor="rgba(245,158,11,0.10)"))
+            line=dict(color=BLUE, width=2), fill="tozeroy",
+            fillcolor="rgba(29,111,191,0.10)"))
         fig_n.add_vrect(x0=lo95, x1=hi95, fillcolor="rgba(16,185,129,0.07)",
             layer="below", line_width=0, annotation_text="IC 95%",
             annotation_font_color=GREEN)
@@ -867,9 +1007,9 @@ elif st.session_state.step == 3:
     .sb:hover{{opacity:.85;transform:translateY(-1px);}}
     .wa{{background:#25d366;color:#fff;}} .tw{{background:#1da1f2;color:#fff;}}
     .li{{background:#0077b5;color:#fff;}} .fb{{background:#1877f2;color:#fff;}}
-    .em{{background:#374151;color:#e8f0ff;border:1px solid rgba(255,255,255,.15);}}
-    .cp{{background:#111e38;color:#f59e0b;border:1px solid rgba(245,158,11,.4);}}
-    .ok{{background:#10b981!important;color:#fff!important;border-color:transparent!important;}}
+    .em{{background:#f0f5fb;color:#1a2744;border:1px solid #c8d9ef;}}
+    .cp{{background:#e4edf8;color:#1d6fbf;border:1px solid #a8c8ee;}}
+    .ok{{background:#16a34a!important;color:#fff!important;border-color:transparent!important;}}
     </style>
     <div class="sr">
       <a class="sb wa" href="https://wa.me/?text={_te}%20{_ue}" target="_blank">
@@ -897,7 +1037,7 @@ elif st.session_state.step == 3:
     with br2:
         components.html("""
         <button onclick="window.parent.window.print()"
-          style="width:100%;padding:11px 22px;background:#f59e0b;color:#08101e;
+          style="width:100%;padding:11px 22px;background:#1d6fbf;color:#ffffff;
                  border:none;border-radius:8px;font-family:'Sora',sans-serif;
                  font-size:13px;font-weight:600;cursor:pointer;min-height:44px;">
           🖨️ Imprimir / Salvar PDF
@@ -910,9 +1050,9 @@ st.markdown("""
 <div class="footer">
   <div class="footer-brand">SolarMT — Lucas do Rio Verde / MT</div>
   <p>Criado por
-    <a href="https://https://www.instagram.com/srkennedydc/" target="_blank">Atlas Kennedy</a>
+    <a href="https://www.instagram.com/_atlaskennedydc" target="_blank">Atlas Kennedy</a>
     · Graduando em Ciência e Tecnologia ·
-    <strong style="color:#e8f0ff">UFMT — Universidade Federal de Mato Grosso</strong>
+    <strong style="color:#0d3d6e">UFMT — Universidade Federal de Mato Grosso</strong>
   </p>
   <p style="font-size:10px;opacity:.6;margin-top:4px">
     Seminário Integrador IV · BCT/UFMT · 2026 · GNU GPL v3.0<br>
