@@ -1058,6 +1058,8 @@ st.markdown("""
   <p style="font-size:10px;opacity:.6;margin-top:4px">
     Seminário Integrador IV · BCT/UFMT · 2026 · GNU GPL v3.0<br>
     Dados de irradiação: Atlas Brasileiro de Energia Solar, 2ª Ed. — INPE/LABREN (2017)<br>
+    LABREN (Laboratório de Modelagem e Estudos de Recursos Renováveis de Energia) / CCST (Centro de Ciência do Sistema
+Terrestre) / INPE (Intituto Nacional de Pesquisas Espaciais) – Brasil.
     DOI: 10.34024/978851700089 · Tarifa: ENERGISA-MT · Emissão CO₂: ONS 2023
   </p>
 </div>
